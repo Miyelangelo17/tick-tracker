@@ -1,0 +1,16 @@
+export const CITY_CORDS = { 
+    "London": { lat: 51.5074, lng: -0.1278 },
+    "Manchester": { lat: 53.4808, lng: -2.2426 },
+    "Birmingham": { lat: 52.4862, lng: -1.8904 }, 
+    "Leeds": { lat: 53.8008, lng: -1.5491 },
+    "Glasgow": { lat: 55.8642, lng: -4.2518 },
+    "Liverpool": { lat: 53.4084, lng: -2.9916 },
+    "Bristol": { lat: 51.4545, lng: -2.5879 },
+    "Sheffield": { lat: 53.3811, lng: -1.4701 },
+    "Edinburgh": { lat: 55.9533, lng: -3.1883 },
+    "Leicester": { lat: 52.6369, lng: -1.1398 },
+    "Southampton": { lat: 50.9097, lng: -1.4044 },
+    "Newcastle": { lat: 54.9783, lng: -1.6174 },
+    "Nottingham": { lat: 52.9548, lng: -1.1581 },
+    "Cardiff": { lat: 51.4816, lng: -3.1791 },  
+}
