@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react' 
+import TickMap from './Components/TickMap';  /// imports the TickMap component from the Components folder  
 
 const API_URL = 'https://dev-task.elancoapps.com/data/tick-sightings'
 
@@ -21,13 +22,7 @@ function App() {
   return (
     <div>
       <h1>UK Tick Sightings ({sightings.length})</h1>
-      <ul>
-        {sightings.slice(0, 50).map(s => (
-          <li key={s.id}>
-            {s.date.slice(0, 10)} — {s.species} in {s.location}
-          </li>
-        ))}
-      </ul>
+      <TickMap sightings={sightings} />  /// passes the sightings data to the TickMap component as a prop
     </div>
   )
 }
