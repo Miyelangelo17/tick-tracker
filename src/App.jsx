@@ -22,7 +22,7 @@ function App() {
   return (
     <div>
       <h1>UK Tick Sightings ({sightings.length})</h1>
-      <TickMap sightings={sightings} />  /// passes the sightings data to the TickMap component as a prop
+      <TickMap sightings={sightings} />  {/* passes the sightings data to the TickMap component as a prop */}
     </div>
   )
 }
