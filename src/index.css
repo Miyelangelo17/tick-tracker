@@ -9,10 +9,14 @@
   --map-glow: rgba(0, 108, 201, 0.15);   /* light blue ring around the map */
   --map-shadow: rgba(5, 12, 71, 0.15);   /* soft navy shadow under the map */
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --sans: 'Atkinson Hyperlegible', system-ui, 'Segoe UI', Roboto, sans-serif;
+  --heading: 'Atkinson Hyperlegible', system-ui, 'Segoe UI', Roboto, sans-serif;
 
-  font: 18px/145% var(--sans);
+  /* Text size multiplier: 1 normally, bigger when the magnifier toggle is on.
+     Every font size below is "size x --scale", so one change resizes all the text. */
+  --scale: 1;
+
+  font: calc(18px * var(--scale)) / 155% var(--sans);
   letter-spacing: 0.18px;
   color-scheme: light;
   color: var(--text);
@@ -23,8 +27,13 @@
   -moz-osx-font-smoothing: grayscale;
 
   @media (max-width: 1024px) {
-    font-size: 16px;
+    font-size: calc(17px * var(--scale));
   }
+}
+
+/* Magnifier toggle: App.jsx puts data-text-size="large" on <html> */
+:root[data-text-size='large'] {
+  --scale: 1.25;
 }
 
 /* ---------- Colours: dark mode ----------
@@ -67,21 +76,21 @@ h2 {
 }
 
 h1 {
-  font-size: 40px;
-  letter-spacing: -1.2px;
-  margin: 24px 0 12px;
+  font-size: calc(42px * var(--scale));
+  font-weight: 700;
+  margin: 28px 0 14px;
   @media (max-width: 1024px) {
-    font-size: 32px;
+    font-size: calc(34px * var(--scale));
   }
 }
 
 h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
+  font-size: calc(26px * var(--scale));
+  font-weight: 700;
+  line-height: 125%;
   margin: 0 0 8px;
   @media (max-width: 1024px) {
-    font-size: 20px;
+    font-size: calc(22px * var(--scale));
   }
 }
 
@@ -91,7 +100,8 @@ p {
 
 /* ---------- Header, tabs and light/dark toggle ---------- */
 header {
-  position: relative; /* so the toggle can sit in the header's top-right corner */
+  position: relative; /* so the logo and toolbar can sit in the header's corners */
+  min-height: 170px;  /* tall enough for the 3 toolbar buttons */
 }
 
 nav {
@@ -117,15 +127,33 @@ nav button[aria-current='page'] {
   color: white;
 }
 
-.theme-toggle {
+/* Toolbar: light/dark, colour-blind and magnifier buttons, stacked in the top-right */
+.toolbar {
   position: absolute;
   top: 16px;
   right: 16px;
-  padding: 6px;
-  line-height: 0; /* stops extra space under the image */
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
-.theme-icon {
+.tool-button {
+  padding: 6px;
+  line-height: 0; /* stops extra space under the image */
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.tool-button:hover {
+  border-color: var(--accent);
+}
+
+/* A toggle that's switched on gets a blue border and glow */
+.tool-button[aria-pressed='true'] {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--map-glow);
+}
+
+.tool-icon {
   width: 28px;
   height: 28px;
 }
@@ -199,11 +227,11 @@ main > p {
 }
 
 .results h2 {
-  font-size: 20px;
+  font-size: calc(22px * var(--scale));
 }
 
 .results-count {
-  font-size: 14px;
+  font-size: calc(15px * var(--scale));
   margin-bottom: 12px;
 }
 
@@ -252,7 +280,7 @@ main > p {
 }
 
 .tag {
-  font-size: 12px;
+  font-size: calc(14px * var(--scale));
   font-style: italic;
   padding: 1px 8px;
   border-radius: 999px;
@@ -260,8 +288,8 @@ main > p {
 }
 
 .badge {
-  font-size: 11px;
-  font-weight: 600;
+  font-size: calc(13px * var(--scale));
+  font-weight: 700;
   padding: 1px 6px;
   border-radius: 4px;
   background: var(--text-h);
@@ -269,7 +297,7 @@ main > p {
 }
 
 .result-meta {
-  font-size: 13px;
+  font-size: calc(15px * var(--scale));
   margin-top: 2px;
 }
 
@@ -303,7 +331,7 @@ main > p {
 
 .popup-actions button {
   padding: 2px 8px;
-  font-size: 14px;
+  font-size: calc(15px * var(--scale));
   color: #08060d;
   background: #fff;
 }
@@ -352,7 +380,7 @@ main > p {
 }
 
 .sources {
-  font-size: 14px;
+  font-size: calc(16px * var(--scale));
 }
 
 .read-more {
@@ -412,7 +440,7 @@ main > p {
 }
 
 .hint {
-  font-size: 14px;
+  font-size: calc(16px * var(--scale));
 }
 
 .preview {
@@ -466,15 +494,35 @@ main > p {
 }
 
 .logo {
-  width: 48px;
-  height: 48px;
+  position: absolute; /* top-left corner of the header */
+  top: 16px;
+  left: 16px;
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px var(--border); /* thin ring so the navy logo still stands out in dark mode */
 }
 
 footer {
   margin-top: auto; /* pushes the footer to the bottom of the page */
   padding: 16px 24px;
   border-top: 1px solid var(--border);
-  font-size: 14px;
+  font-size: calc(16px * var(--scale));
+}
+
+/* Map popups: Leaflet's default text is small (12-13px), so use our font and size */
+.map-frame .leaflet-container {
+  font-family: var(--sans);
+}
+
+.map-frame .leaflet-popup-content {
+  font-size: calc(16px * var(--scale));
+  line-height: 1.45;
+}
+
+.map-frame .leaflet-popup-content h3 {
+  font-size: calc(20px * var(--scale));
+  margin: 0 0 6px;
 }
 
 /* ---------- Dropdown and input animations ----------
@@ -531,20 +579,28 @@ input[type='file'] {
 
 /* ---------- Small screens (phones) ---------- */
 @media (max-width: 600px) {
+  header {
+    min-height: 0;
+    padding-top: 72px; /* room above the title for the logo and toolbar */
+  }
+
   .title {
-    font-size: 28px;
-    gap: 8px;
-    padding: 0 56px; /* leaves room for the toggle on the right (and balances it on the left) */
+    font-size: calc(28px * var(--scale));
+    margin-top: 0;
   }
 
   .logo {
-    width: 36px;
-    height: 36px;
+    top: 8px;
+    left: 12px;
+    width: 56px;
+    height: 56px;
   }
 
-  .theme-toggle {
-    top: 10px;
-    right: 10px;
+  /* On phones the 3 toolbar buttons sit in a row instead of a column */
+  .toolbar {
+    top: 12px;
+    right: 12px;
+    flex-direction: row;
   }
 
   nav {

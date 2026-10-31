@@ -17,7 +17,7 @@ function shareCity(city, count) {
   }
 }
 
-function TickMap({ sightings, onReport, activeCity }) {
+function TickMap({ sightings, onReport, activeCity, colourBlind }) {
 
   // Keeps a reference to each city's circle, e.g. { London: <the Leaflet circle>, ... },
   // so other code can tell a circle to open its popup.
@@ -77,7 +77,7 @@ function TickMap({ sightings, onReport, activeCity }) {
       {cityNames.map(city => {
         const citySightings = sightingsByCity[city];
         const count = citySightings.length;
-        const severity = getSeverity(count, maxCount);
+        const severity = getSeverity(count, maxCount, colourBlind);
         const { lat, lng } = CITY_CORDS[city];
 
         // Newest first: sort a copy by date (dates are text like "2022-08-01T06:40:31",

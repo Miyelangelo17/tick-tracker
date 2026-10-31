@@ -3,7 +3,8 @@ import TickMap from './Components/TickMap'
 import Learn from './Components/Learn'
 import ReportForm from './Components/ReportForm'
 import Results from './Components/Results'
-import logo from './assets/tick-logo.svg'
+import { getPalette } from './severity'
+import logo from './assets/tick-logo.png' // my own logo design
 
 const API_URL = 'https://dev-task.elancoapps.com/data/tick-sightings'
 
@@ -39,6 +40,21 @@ function App() {
     document.documentElement.dataset.theme = theme
     localStorage.setItem('theme', theme)
   }, [theme])
+
+  // Accessibility toggles (remembered like the theme).
+  // localStorage stores text, so "true" === 'true' turns it back into true/false.
+  const [colourBlind, setColourBlind] = useState(() => localStorage.getItem('colourBlind') === 'true')
+  const [largeText, setLargeText] = useState(() => localStorage.getItem('largeText') === 'true')
+
+  useEffect(() => {
+    localStorage.setItem('colourBlind', colourBlind)
+  }, [colourBlind])
+
+  // Large text: put data-text-size="large" on the <html> tag; the CSS scales every font size
+  useEffect(() => {
+    document.documentElement.dataset.textSize = largeText ? 'large' : 'normal'
+    localStorage.setItem('largeText', largeText)
+  }, [largeText])
 
   // Sightings reported by the user, loaded from the browser's localStorage.
   // localStorage only stores text, so JSON.parse turns it back into data.
@@ -100,6 +116,9 @@ function App() {
     (yearFilter === 'All' || sighting.date.startsWith(yearFilter))
   )
 
+  // The 3 legend colours (normal or colour-blind-friendly)
+  const palette = getPalette(colourBlind)
+
   // Called by the "Report a sighting" button in a map popup
   function handleReport(city) {
     setReportCity(city)
@@ -109,25 +128,46 @@ function App() {
   return (
     <div className="app">
       <header>
-        <h1 className="title">
-          <img className="logo" src={logo} alt="" /> {/* alt="" because the title already says what it is */}
-          UK Tick Tracker
-        </h1>
+        {/* Logo in the top-left corner. alt="" because the title already says what it is */}
+        <img className="logo" src={logo} alt="" />
 
-        {/* Light/dark toggle. Shows a moon in light mode, a sun in dark mode.
-            The images live in public/icons/ - swap in your own PNGs with the same names */}
-        <button
-          className="theme-toggle"
-          onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
-          aria-label={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
-          title={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
-        >
-          <img
-            className="theme-icon"
-            src={theme === 'light' ? '/icons/moon.png' : '/icons/sun.png'}
-            alt=""
-          />
-        </button>
+        <h1 className="title">UK Tick Tracker</h1>
+
+        {/* Toolbar in the top-right corner. The icons live in public/icons/ -
+            swap in your own PNGs with the same names */}
+        <div className="toolbar">
+          {/* Light/dark toggle: moon in light mode, sun in dark mode */}
+          <button
+            className="tool-button"
+            onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
+            aria-label={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
+            title={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
+          >
+            <img className="tool-icon" src={theme === 'light' ? '/icons/moon.png' : '/icons/sun.png'} alt="" />
+          </button>
+
+          {/* Colour-blind-friendly map colours. aria-pressed tells screen readers it's on/off */}
+          <button
+            className="tool-button"
+            onClick={() => setColourBlind(!colourBlind)}
+            aria-pressed={colourBlind}
+            aria-label="Colour-blind-friendly colours"
+            title="Colour-blind-friendly colours"
+          >
+            <img className="tool-icon" src="/icons/colourblind.png" alt="" />
+          </button>
+
+          {/* Magnifier: makes all the text bigger */}
+          <button
+            className="tool-button"
+            onClick={() => setLargeText(!largeText)}
+            aria-pressed={largeText}
+            aria-label="Larger text"
+            title="Larger text"
+          >
+            <img className="tool-icon" src="/icons/magnifier.png" alt="" />
+          </button>
+        </div>
 
         {/* Tabs: clicking one changes 'page', which changes what is shown below */}
         <nav>
@@ -171,17 +211,17 @@ function App() {
           <div className="map-layout">
             {/* map-frame gives the map its rounded, highlighted border (see index.css) */}
             <div className="map-frame">
-              <TickMap sightings={filteredSightings} onReport={handleReport} activeCity={activeCity} />
+              <TickMap sightings={filteredSightings} onReport={handleReport} activeCity={activeCity} colourBlind={colourBlind} />
             </div>
 
-            <Results sightings={filteredSightings} newestDate={newestDate} onSelectCity={setActiveCity} />
+            <Results sightings={filteredSightings} newestDate={newestDate} onSelectCity={setActiveCity} colourBlind={colourBlind} />
           </div>
 
           {/* Legend explaining the circle colours */}
           <div className="legend">
-            <span><span className="dot" style={{ background: '#d7301f' }}></span> High activity</span>
-            <span><span className="dot" style={{ background: '#fc8d59' }}></span> Medium</span>
-            <span><span className="dot" style={{ background: '#fdcc8a' }}></span> Low</span>
+            <span><span className="dot" style={{ background: palette.High }}></span> High activity</span>
+            <span><span className="dot" style={{ background: palette.Medium }}></span> Medium</span>
+            <span><span className="dot" style={{ background: palette.Low }}></span> Low</span>
             <span>Bigger circle = more sightings</span>
           </div>
         </main>

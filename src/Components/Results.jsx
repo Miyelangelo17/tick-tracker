@@ -6,7 +6,8 @@ const ONE_YEAR = 365 * 24 * 60 * 60 * 1000 // a year in milliseconds
 // - sightings: the filtered sightings (same list the map gets)
 // - newestDate: the newest date in the whole API data, used for the "Recent" badge
 // - onSelectCity: function from App; hovering a card opens that city's popup on the map
-function Results({ sightings, newestDate, onSelectCity }) {
+// - colourBlind: true when the colour-blind-friendly palette is switched on
+function Results({ sightings, newestDate, onSelectCity, colourBlind }) {
   // 1. Count sightings per city (same pattern as my first counter),
   //    so each result's dot matches its city's colour on the map
   const counts = {}
@@ -41,7 +42,7 @@ function Results({ sightings, newestDate, onSelectCity }) {
 
       <ul>
         {newest.map(sighting => {
-          const severity = getSeverity(counts[sighting.location], maxCount)
+          const severity = getSeverity(counts[sighting.location], maxCount, colourBlind)
           const isRecent = latestTime - new Date(sighting.date).getTime() < ONE_YEAR
 
           return (
