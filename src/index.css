@@ -273,6 +273,12 @@ main > p {
   margin-top: 2px;
 }
 
+/* Keep place names readable under the circles: "multiply" blends the circles with the map
+   like coloured see-through film, so the dark map text still shows through them */
+.map-frame .leaflet-overlay-pane {
+  mix-blend-mode: multiply;
+}
+
 /* Circles get a highlighted outline when you hover over them */
 .map-frame path.leaflet-interactive {
   transition: stroke-width 0.15s;

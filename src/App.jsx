@@ -167,8 +167,6 @@ function App() {
             </label>
           </div>
 
-          <p>Showing {filteredSightings.length} of {allSightings.length} sightings. Click a circle for details.</p>
-
           {/* Map on the left, Results panel on the right (stacked on phones) */}
           <div className="map-layout">
             {/* map-frame gives the map its rounded, highlighted border (see index.css) */}

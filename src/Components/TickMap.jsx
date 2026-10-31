@@ -18,6 +18,7 @@ function shareCity(city, count) {
 }
 
 function TickMap({ sightings, onReport, activeCity }) {
+
   // Keeps a reference to each city's circle, e.g. { London: <the Leaflet circle>, ... },
   // so other code can tell a circle to open its popup.
   // useRef stores a value that survives redraws without causing one.
@@ -91,7 +92,7 @@ function TickMap({ sightings, onReport, activeCity }) {
             ref={circle => { markersRef.current[city] = circle; }} // remember this circle
             center={[lat, lng]}
             radius={6 + (count / maxCount) * 18} // bigger circle = more sightings
-            pathOptions={{ color: '#333', weight: 1, fillColor: severity.colour, fillOpacity: 0.8 }}
+            pathOptions={{ color: '#333', weight: 1, fillColor: severity.colour, fillOpacity: 0.65 }}
           >
             <Popup>
               <h3>{city}</h3>
