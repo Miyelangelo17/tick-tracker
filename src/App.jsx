@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
-import TickMap from './Components/TickMap' 
+import TickMap from './Components/TickMap'
 import Learn from './Components/Learn'
+import ReportForm from './Components/ReportForm'
 
 const API_URL = 'https://dev-task.elancoapps.com/data/tick-sightings'
 
@@ -21,6 +22,17 @@ function App() {
   // The city to pre-fill on the report form (set by a popup's Report button)
   const [reportCity, setReportCity] = useState('')
 
+  // Sightings reported by the user, loaded from the browser's localStorage.
+  // localStorage only stores text, so JSON.parse turns it back into data.
+  const [reports, setReports] = useState(() => {
+    try {
+      const saved = localStorage.getItem('tickReports')
+      return saved ? JSON.parse(saved) : []
+    } catch {
+      return [] // if the saved data is unreadable, start with no reports
+    }
+  })
+
   // useEffect with [] runs ONCE, when the page first loads
   useEffect(() => {
     fetch(API_URL)
@@ -32,9 +44,23 @@ function App() {
   if (error) return <p>{error}</p>
   if (sightings.length === 0) return <p>Loading sightings...</p>
 
+  // API sightings + the user's own reports, so reports show on the map too
+  const allSightings = [...sightings, ...reports]
+
+  // Called by the report form when a valid report is submitted
+  function handleAddReport(report) {
+    // Look up the Latin name for the species from the API data
+    const match = sightings.find(sighting => sighting.species === report.species)
+    const fullReport = { ...report, latinName: match ? match.latinName : '' }
+
+    const updatedReports = [...reports, fullReport]
+    setReports(updatedReports) // update the page
+    localStorage.setItem('tickReports', JSON.stringify(updatedReports)) // save in the browser
+  }
+
   // Build the list of years for the year dropdown (same pattern as my city counter)
   const years = []
-  for (const sighting of sightings) {
+  for (const sighting of allSightings) {
     const year = sighting.date.slice(0, 4) // "2022-08-01T06:40:31" -> "2022"
     if (!years.includes(year)) {
       years.push(year)
@@ -43,7 +69,7 @@ function App() {
   years.sort()
 
   // Keep only the sightings that match BOTH dropdowns
-  const filteredSightings = sightings.filter(sighting =>
+  const filteredSightings = allSightings.filter(sighting =>
     (speciesFilter === 'All' || sighting.species === speciesFilter) &&
     (yearFilter === 'All' || sighting.date.startsWith(yearFilter))
   )
@@ -97,7 +123,7 @@ function App() {
             </label>
           </div>
 
-          <p>Showing {filteredSightings.length} of {sightings.length} sightings. Click a circle for details.</p>
+          <p>Showing {filteredSightings.length} of {allSightings.length} sightings. Click a circle for details.</p>
 
           <TickMap sightings={filteredSightings} onReport={handleReport} />
 
@@ -113,13 +139,13 @@ function App() {
 
       {page === 'learn' && (
         <main>
-                    <Learn sightings={sightings} />
+          <Learn sightings={allSightings} />
         </main>
       )}
 
       {page === 'report' && (
         <main>
-          <p>Report form coming next. City from popup: {reportCity || 'none'}</p>
+          <ReportForm initialCity={reportCity} speciesList={SPECIES} onSubmit={handleAddReport} />
         </main>
       )}
     </div>

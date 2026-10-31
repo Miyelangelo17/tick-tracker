@@ -162,4 +162,37 @@ I have been swamped with the group task among other deadlines so i had to delay 
 - All the data is UK cities, so letting users wander around the world map adds nothing and can confuse them.
 
 ### Note
-- GitHub Copilot autocomplete suggested the boundary coordinates. I checked them by dragging the map to each edge of the UK.
+- GitHub Copilot autocomplete suggested the boundary coordinates. I checked them by dragging the map to each edge of the UK. 
+
+### Done
+- Report form with date, time, location (city dropdown), species and an optional photo.
+- Validation with all three message types from the brief:
+  - **Errors** (red, block saving): missing date, time, location or species; a date/time in the future; a file that isn't an image; a photo over 5 MB.
+  - **Warning** (orange, still saves): no photo attached, because a photo helps confirm the species.
+  - **Success** (green): confirms the report was saved and added to the map.
+- Photo upload with a preview of the chosen image.
+- Opening the form from a map popup pre-fills that city.
+- Saved reports appear on the map straight away, marked "(your report)" in the popup, and survive a page refresh.
+
+### How it works
+- Each field has its own state, like the map filters: the input shows the state value and `onChange` updates it.
+- `e.preventDefault()` stops the form's default behaviour (reloading the page) so I can handle the submit myself.
+- `handleSubmit` checks every field and collects problems in a `newErrors` list. If the list isn't empty, it shows them and `return`s before saving anything.
+- `noValidate` turns off the browser's built-in pop-ups so my own messages are used, making them consistent across browsers.
+- Photo: `e.target.files[0]` is the chosen file. I check its `type` and `size`, and `URL.createObjectURL` makes a temporary link so an `<img>` can preview it.
+- Saving: App keeps a `reports` state and saves it to localStorage. localStorage only stores text, so `JSON.stringify` converts the data to text when saving and `JSON.parse` converts it back when loading.
+- `useState(() => ...)` loads saved reports only once, when the app starts. `try/catch` means corrupted saved data won't crash the app; it just starts with no reports.
+- New reports have the same shape as API sightings (`date`, `location`, `species`, `latinName`), so the map, filters, popups and Learn counts handle them with no extra code. `[...sightings, ...reports]` joins the two lists.
+- The form doesn't save anything itself. It calls the `onSubmit` function App passed in, the same "child tells parent" pattern as the popup's Report button.
+
+### Decisions
+- **localStorage instead of a real database.** No server needed, works offline, keeps the MVP simple. Trade-off: reports only exist in the browser they were made in, so other users can't see them. In production I'd use a hosted database (e.g. Supabase or Firebase) so reports are shared, and possibly checked before being shown publicly.
+- **Only the photo's file name is saved, not the image.** localStorage is only about 5 MB, so storing images would fill it quickly. In production, photos would go to cloud storage.
+- **The location is a dropdown, not free text.** Every report then matches a city with known coordinates, so it can go on the map without errors from typos.
+- **Future dates blocked** with both the `max` attribute on the date picker and a check in the code.
+- **Accessibility:** every label is linked to its input (`htmlFor` / `id`), and messages use `role="alert"` / `role="status"` so screen readers announce them.
+
+### Learned
+- `!value` is a quick way to check whether something is empty.
+- The spread syntax `...` copies items out of an array or object: `[...a, ...b]` joins two arrays, and `{ ...report, latinName: x }` copies an object and adds a field.
+- Clear test reports before recording with `localStorage.removeItem('tickReports')` in the console.

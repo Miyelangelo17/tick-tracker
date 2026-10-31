@@ -95,7 +95,7 @@ function TickMap({ sightings, onReport }) {
               <ul>
                 {recent.map(s => (
                   <li key={s.id}>
-                    {s.date.slice(0, 10)} — {s.species}
+                                        {s.date.slice(0, 10)} — {s.species}{s.userReported && " (your report)"}
                   </li>
                 ))}
               </ul>
