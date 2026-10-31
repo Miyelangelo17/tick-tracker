@@ -195,4 +195,38 @@ I have been swamped with the group task among other deadlines so i had to delay 
 ### Learned
 - `!value` is a quick way to check whether something is empty.
 - The spread syntax `...` copies items out of an array or object: `[...a, ...b]` joins two arrays, and `{ ...report, latinName: x }` copies an object and adds a field.
-- Clear test reports before recording with `localStorage.removeItem('tickReports')` in the console.
+- Clear test reports before recording with `localStorage.removeItem('tickReports')` in the console. 
+
+## Sat 31 Oct: Styling, dark mode and Results panel
+
+### Done
+- **Elanco brand colours** (sampled from elanco.com): blue #006CC9, navy #050C47, dark text #00243D. Colours only, not their logo, because using a company's logo on a public repo would make it look official.
+- **Light/dark toggle** in the top-right, with sun/moon PNG icons (in `public/icons/`, swappable). The choice is remembered.
+- **Original tick logo** next to the title, also used as the browser-tab icon (favicon).
+- **Footer** with my name and credits for the data (Elanco API) and the map (OpenStreetMap).
+- **Map frame**: rounded Elanco-blue border, a soft glow ring and a shadow. Circles get a blue outline on hover.
+- **Dropdown/input animations**: the border turns blue and the box lifts on hover, and a glow ring appears on focus.
+- **Phone layout**: smaller title, wrapping filters and legend, and Results stacked under the map.
+- **Results panel** (based on the brief's example UI): the 20 newest sightings matching the filters, each with a severity dot, city, Latin name tag, date and species, plus "Recent" and "Your report" badges.
+
+### How it works
+- Colours are CSS variables on `:root`. Dark mode is `:root[data-theme='dark']`, which only applies when App puts `data-theme="dark"` on the `<html>` tag. Changing the variables restyles the whole app at once.
+- The theme `useEffect` has `[theme]` instead of `[]`, so it runs every time the theme changes, not just once.
+- Animations use `transition` (animate changes over 0.2s), `:hover` and `:focus-visible`.
+- The phone layout uses `@media (max-width: 600px)`. The map and Results sit in a CSS grid (`1fr 320px`) that becomes one column on phones.
+- `getSeverity` moved into `src/severity.js` so the map and Results panel share one copy of the rule.
+- "Recent" = within a year of the newest sighting in the API data, because the data stops in 2024 and comparing with today would mark nothing as recent.
+
+### Problems and solutions
+- My colour changes did nothing: Vite's old `@media (prefers-color-scheme: dark)` block came later in the file and overrode them, because my computer is in dark mode. In CSS, the later rule wins. Fixed by switching dark mode to the toggle instead.
+- The toggle button didn't appear: I'd added the CSS but not the code in App.jsx.
+- VS Code opened `favicon.svg` as a picture: right-click → Open With → Text Editor to edit the code.
+- I can't animate the open dropdown list, because the browser/OS draws it. I animated the box instead.
+
+### Accessibility
+- Contrast checked: white on Elanco blue is about 5.3:1 (minimum 4.5:1). In dark mode, text uses a lighter blue so it stays readable.
+- `prefers-reduced-motion` turns animations off for users who've asked their computer for less motion.
+- The decorative logo and icons use `alt=""`, and the toggle has an `aria-label`.
+
+### Note
+- Claude wrote the styling and Results code under my direction, applied it directly to my project files, and I reviewed and tested it in the browser.

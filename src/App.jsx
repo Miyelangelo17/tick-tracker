@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import TickMap from './Components/TickMap'
 import Learn from './Components/Learn'
 import ReportForm from './Components/ReportForm'
+import Results from './Components/Results'
 import logo from './assets/tick-logo.svg'
 
 const API_URL = 'https://dev-task.elancoapps.com/data/tick-sightings'
@@ -82,6 +83,14 @@ function App() {
   }
   years.sort()
 
+  // The newest date in the API data (dates are text like "2024-12-18T...", which compare correctly as text)
+  let newestDate = ''
+  for (const sighting of sightings) {
+    if (sighting.date > newestDate) {
+      newestDate = sighting.date
+    }
+  }
+
   // Keep only the sightings that match BOTH dropdowns
   const filteredSightings = allSightings.filter(sighting =>
     (speciesFilter === 'All' || sighting.species === speciesFilter) &&
@@ -157,9 +166,14 @@ function App() {
 
           <p>Showing {filteredSightings.length} of {allSightings.length} sightings. Click a circle for details.</p>
 
-          {/* map-frame gives the map its rounded, highlighted border (see index.css) */}
-          <div className="map-frame">
-            <TickMap sightings={filteredSightings} onReport={handleReport} />
+          {/* Map on the left, Results panel on the right (stacked on phones) */}
+          <div className="map-layout">
+            {/* map-frame gives the map its rounded, highlighted border (see index.css) */}
+            <div className="map-frame">
+              <TickMap sightings={filteredSightings} onReport={handleReport} />
+            </div>
+
+            <Results sightings={filteredSightings} newestDate={newestDate} />
           </div>
 
           {/* Legend explaining the circle colours */}
