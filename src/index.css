@@ -348,3 +348,38 @@ footer {
   border-top: 1px solid var(--border);
   font-size: 14px;
 }
+
+/* ---------- Small screens (phones) ---------- */
+@media (max-width: 600px) {
+  .title {
+    font-size: 28px;
+    gap: 8px;
+    padding: 0 56px; /* leaves room for the toggle on the right (and balances it on the left) */
+  }
+
+  .logo {
+    width: 36px;
+    height: 36px;
+  }
+
+  .theme-toggle {
+    top: 10px;
+    right: 10px;
+  }
+
+  .filters {
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 0 12px;
+  }
+
+  .map-frame {
+    margin: 0 12px;
+  }
+
+  .legend {
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    padding: 0 12px;
+  }
+}
