@@ -5,7 +5,8 @@ const ONE_YEAR = 365 * 24 * 60 * 60 * 1000 // a year in milliseconds
 // Results panel next to the map: the newest sightings that match the filters.
 // - sightings: the filtered sightings (same list the map gets)
 // - newestDate: the newest date in the whole API data, used for the "Recent" badge
-function Results({ sightings, newestDate }) {
+// - onSelectCity: function from App; hovering a card opens that city's popup on the map
+function Results({ sightings, newestDate, onSelectCity }) {
   // 1. Count sightings per city (same pattern as my first counter),
   //    so each result's dot matches its city's colour on the map
   const counts = {}
@@ -44,7 +45,16 @@ function Results({ sightings, newestDate }) {
           const isRecent = latestTime - new Date(sighting.date).getTime() < ONE_YEAR
 
           return (
-            <li key={sighting.id} className="result">
+            <li
+              key={sighting.id}
+              className="result"
+              tabIndex={0} // lets keyboard users Tab onto a card too
+              onMouseEnter={() => onSelectCity(sighting.location)} // hover: open the popup
+              onMouseLeave={() => onSelectCity(null)}             // so hovering the same city again re-opens it
+              onFocus={() => onSelectCity(sighting.location)}      // keyboard
+              onBlur={() => onSelectCity(null)}
+              onClick={() => onSelectCity(sighting.location)}      // touch screens have no hover
+            >
               <span
                 className="dot"
                 style={{ background: severity.colour }}

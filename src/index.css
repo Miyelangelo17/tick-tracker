@@ -226,9 +226,16 @@ main > p {
   transition: border-color 0.2s ease, transform 0.2s ease;
 }
 
-.result:hover {
+.result {
+  cursor: pointer;
+}
+
+.result:hover,
+.result:focus-visible {
   border-color: var(--accent);
   transform: translateY(-1px);
+  outline: none;
+  box-shadow: 0 0 0 3px var(--map-glow);
 }
 
 .result .dot {
@@ -340,6 +347,29 @@ main > p {
 
 .sources {
   font-size: 14px;
+}
+
+.read-more {
+  display: inline-block;
+  margin-top: 8px;
+  font-weight: 600;
+  color: var(--accent-text);
+  text-decoration: none;
+}
+
+.read-more:hover,
+.read-more:focus-visible {
+  text-decoration: underline;
+}
+
+/* Hidden on screen but still read out by screen readers */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
 }
 
 /* ---------- Report form ---------- */

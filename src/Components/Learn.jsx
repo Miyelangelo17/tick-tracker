@@ -1,6 +1,8 @@
 // Education page: species identification guide + prevention tips.
 // Facts come from the UK Health Security Agency's tick species profiles
 // and NHS tick bite advice (links at the bottom of the page).
+// Each readMore link uses a "text fragment" (#:~:text=...) so the browser
+// jumps straight to that species' section on the UKHSA page and highlights it.
 
 const SPECIES_INFO = [
   {
@@ -8,30 +10,35 @@ const SPECIES_INFO = [
     hosts: 'Badgers, foxes and domestic dogs',
     where: 'Widely distributed throughout the UK',
     tip: 'One of the ticks you may find on your dog, so check them after walks.',
+    readMore: 'https://www.gov.uk/guidance/tick-species-profiles#:~:text=Ixodes%20canisuga%20%28fox%2Fbadger%20tick%29',
   },
   {
     name: 'Marsh tick',
     hosts: 'Water voles',
     where: 'Prefers wetland habitats, e.g. fens and marshes',
     tip: 'Take extra care on walks near rivers, marshes and wetlands.',
+    readMore: 'https://www.gov.uk/guidance/tick-species-profiles#:~:text=Ixodes%20apronophorus%20%28marsh%20tick%29',
   },
   {
     name: 'Passerine tick',
     hosts: 'Birds, especially perching birds (passerines)',
     where: 'England, with newer records in Wales',
     tip: 'Sometimes found feeding on humans.',
+    readMore: 'https://www.gov.uk/guidance/tick-species-profiles#:~:text=Ixodes%20frontalis%20%28passerine%20tick%29',
   },
   {
     name: 'Southern rodent tick',
     hosts: 'Small rodents such as mice and voles',
     where: 'Lives in rodent burrows, mainly in southern England',
     tip: 'Rarely seen out in the open, as it lives underground in burrows.',
+    readMore: 'https://www.gov.uk/guidance/tick-species-profiles#:~:text=Ixodes%20acuminatus%20%28southern%20rodent%20tick%29',
   },
   {
     name: 'Tree-hole tick',
     hosts: 'Birds that nest in tree holes, such as great tits and blue tits',
     where: 'Tree holes and nest boxes, mostly in England',
     tip: 'Wear gloves when cleaning out bird nest boxes.',
+    readMore: 'https://www.gov.uk/guidance/tick-species-profiles#:~:text=Ixodes%20arboricola%20%28tree%2Dhole%20tick%29',
   },
 ]
 
@@ -61,6 +68,10 @@ function Learn({ sightings }) {
               <p><strong>Where:</strong> {species.where}</p>
               <p><strong>Tip:</strong> {species.tip}</p>
               <p className="count">{countSightings(species.name)} sightings recorded</p>
+              <a className="read-more" href={species.readMore} target="_blank" rel="noreferrer">
+                Read more about the {species.name.toLowerCase()}
+                <span className="visually-hidden"> (opens in a new tab)</span> →
+              </a>
             </article>
           ))}
         </div>

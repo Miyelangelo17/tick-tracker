@@ -1,3 +1,4 @@
+import { useRef, useEffect } from 'react';
 import { MapContainer, TileLayer, CircleMarker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { CITY_CORDS } from '../cities';
@@ -16,7 +17,21 @@ function shareCity(city, count) {
   }
 }
 
-function TickMap({ sightings, onReport }) {
+function TickMap({ sightings, onReport, activeCity }) {
+  // Keeps a reference to each city's circle, e.g. { London: <the Leaflet circle>, ... },
+  // so other code can tell a circle to open its popup.
+  // useRef stores a value that survives redraws without causing one.
+  const markersRef = useRef({});
+
+  // When the Results panel picks a city, open that city's popup
+  // (Leaflet also pans the map so the popup is visible)
+  useEffect(() => {
+    const marker = markersRef.current[activeCity];
+    if (marker) {
+      marker.openPopup();
+    }
+  }, [activeCity]);
+
   // 1. Group the sightings by city: { London: [sighting, sighting, ...], Leeds: [...] }
   //    Same idea as my counter, but each city keeps a LIST of its sightings
   //    instead of a number, so the popup can show details.
@@ -73,6 +88,7 @@ function TickMap({ sightings, onReport }) {
         return (
           <CircleMarker
             key={city}
+            ref={circle => { markersRef.current[city] = circle; }} // remember this circle
             center={[lat, lng]}
             radius={6 + (count / maxCount) * 18} // bigger circle = more sightings
             pathOptions={{ color: '#333', weight: 1, fillColor: severity.colour, fillOpacity: 0.8 }}

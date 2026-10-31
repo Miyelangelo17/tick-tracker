@@ -24,6 +24,9 @@ function App() {
   // The city to pre-fill on the report form (set by a popup's Report button)
   const [reportCity, setReportCity] = useState('')
 
+  // The city whose popup should open on the map (set by hovering a card in the Results panel)
+  const [activeCity, setActiveCity] = useState(null)
+
   // Light or dark mode. Start with the user's saved choice, otherwise their computer's setting
   const [theme, setTheme] = useState(() => {
     const saved = localStorage.getItem('theme')
@@ -170,10 +173,10 @@ function App() {
           <div className="map-layout">
             {/* map-frame gives the map its rounded, highlighted border (see index.css) */}
             <div className="map-frame">
-              <TickMap sightings={filteredSightings} onReport={handleReport} />
+              <TickMap sightings={filteredSightings} onReport={handleReport} activeCity={activeCity} />
             </div>
 
-            <Results sightings={filteredSightings} newestDate={newestDate} />
+            <Results sightings={filteredSightings} newestDate={newestDate} onSelectCity={setActiveCity} />
           </div>
 
           {/* Legend explaining the circle colours */}
