@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
-import TickMap from './Components/TickMap'
+import TickMap from './Components/TickMap' 
+import Learn from './Components/Learn'
 
 const API_URL = 'https://dev-task.elancoapps.com/data/tick-sightings'
 
@@ -112,7 +113,7 @@ function App() {
 
       {page === 'learn' && (
         <main>
-          <p>Education page coming next.</p>
+                    <Learn sightings={sightings} />
         </main>
       )}
 

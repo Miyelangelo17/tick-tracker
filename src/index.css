@@ -186,4 +186,50 @@ main > p {
   font-size: 14px;
   color: #08060d;
   background: #fff;
+} 
+/* ---------- Learn page ---------- */
+.learn {
+  text-align: left;
+  padding: 0 24px 32px;
+}
+
+.learn section {
+  margin-bottom: 28px;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.card {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.card h3 {
+  margin: 0;
+  color: var(--text-h);
+}
+
+.card p {
+  margin: 6px 0;
+}
+
+.latin {
+  font-style: italic;
+}
+
+.count {
+  color: var(--accent);
+}
+
+.learn li {
+  margin-bottom: 6px;
+}
+
+.sources {
+  font-size: 14px;
 }
