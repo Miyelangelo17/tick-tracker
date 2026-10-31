@@ -1,23 +1,18 @@
+/* ---------- Colours: light mode (default), using Elanco's brand colours ---------- */
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+  --text: #00243d;        /* body text (Elanco dark blue) */
+  --text-h: #050c47;      /* headings (Elanco navy) */
+  --bg: #ffffff;          /* page background */
+  --border: #ededed;      /* borders and dividers */
+  --accent: #006cc9;      /* buttons, active tab (Elanco blue) */
+  --accent-text: #006cc9; /* blue used for text on the page background */
 
   --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
   --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
 
   font: 18px/145% var(--sans);
   letter-spacing: 0.18px;
-  color-scheme: light dark;
+  color-scheme: light;
   color: var(--text);
   background: var(--bg);
   font-synthesis: none;
@@ -30,26 +25,20 @@
   }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
-
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
+/* ---------- Colours: dark mode ----------
+   App.jsx puts data-theme="dark" on the <html> tag when the toggle is switched,
+   and these values replace the light ones above. */
+:root[data-theme='dark'] {
+  --text: #c9d6e3;
+  --text-h: #ffffff;
+  --bg: #0b1230;          /* very dark navy, based on Elanco's navy */
+  --border: #24305e;
+  --accent: #006cc9;      /* buttons stay Elanco blue (white text still readable) */
+  --accent-text: #4da3ff; /* lighter blue so text stays readable on dark */
+  color-scheme: dark;
 }
 
+/* ---------- Page layout and text ---------- */
 body {
   margin: 0;
 }
@@ -74,14 +63,14 @@ h2 {
 }
 
 h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
+  font-size: 40px;
+  letter-spacing: -1.2px;
+  margin: 24px 0 12px;
   @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
+    font-size: 32px;
   }
 }
+
 h2 {
   font-size: 24px;
   line-height: 118%;
@@ -91,34 +80,14 @@ h2 {
     font-size: 20px;
   }
 }
+
 p {
   margin: 0;
 }
 
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
-}
-
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
-}
-.popup-actions {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-} 
-
-/* ---------- Tick Tracker styles ---------- */
-h1 {
-  font-size: 40px;
-  margin: 24px 0 12px;
+/* ---------- Header, tabs and light/dark toggle ---------- */
+header {
+  position: relative; /* so the toggle can sit in the header's top-right corner */
 }
 
 nav {
@@ -144,6 +113,16 @@ nav button[aria-current='page'] {
   color: white;
 }
 
+.theme-toggle {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  font-size: 22px;
+  line-height: 1;
+  padding: 8px 10px;
+}
+
+/* ---------- Map page ---------- */
 .filters {
   display: flex;
   justify-content: center;
@@ -176,6 +155,13 @@ main > p {
   vertical-align: middle;
 }
 
+/* Popups are always white (Leaflet's style), so their buttons use fixed colours */
+.popup-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
 .popup-actions a,
 .popup-actions button {
   white-space: nowrap;
@@ -186,7 +172,8 @@ main > p {
   font-size: 14px;
   color: #08060d;
   background: #fff;
-} 
+}
+
 /* ---------- Learn page ---------- */
 .learn {
   text-align: left;
@@ -223,7 +210,7 @@ main > p {
 }
 
 .count {
-  color: var(--accent);
+  color: var(--accent-text);
 }
 
 .learn li {
@@ -232,4 +219,77 @@ main > p {
 
 .sources {
   font-size: 14px;
+}
+
+/* ---------- Report form ---------- */
+.report {
+  text-align: left;
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 0 24px 32px;
+}
+
+.report form {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.report label {
+  font-weight: 600;
+  color: var(--text-h);
+  margin-top: 10px;
+}
+
+.report input,
+.report select {
+  font: inherit;
+  padding: 6px;
+}
+
+.report button[type='submit'] {
+  margin-top: 16px;
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}
+
+.hint {
+  font-size: 14px;
+}
+
+.preview {
+  max-width: 200px;
+  border-radius: 6px;
+  margin-top: 6px;
+}
+
+/* Messages keep fixed colours in both modes so error/warning/success always look the same */
+.message {
+  padding: 12px 16px;
+  border-radius: 6px;
+  margin: 12px 0;
+  border: 1px solid;
+}
+
+.message ul {
+  margin: 6px 0 0;
+}
+
+.error {
+  background: #fdecea;
+  border-color: #d93025;
+  color: #8a1c13;
+}
+
+.warning {
+  background: #fff4e5;
+  border-color: #f29900;
+  color: #6b4100;
+}
+
+.success {
+  background: #e6f4ea;
+  border-color: #1e8e3e;
+  color: #0d5a26;
 }

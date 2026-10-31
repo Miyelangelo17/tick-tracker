@@ -22,6 +22,19 @@ function App() {
   // The city to pre-fill on the report form (set by a popup's Report button)
   const [reportCity, setReportCity] = useState('')
 
+  // NEW: Light or dark mode. Start with the user's saved choice, otherwise their computer's setting
+  const [theme, setTheme] = useState(() => {
+    const saved = localStorage.getItem('theme')
+    if (saved) return saved
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+  })
+
+  // NEW: Whenever 'theme' changes, put it on the <html> tag (the CSS reads it) and remember it
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme
+    localStorage.setItem('theme', theme)
+  }, [theme])
+
   // Sightings reported by the user, loaded from the browser's localStorage.
   // localStorage only stores text, so JSON.parse turns it back into data.
   const [reports, setReports] = useState(() => {
@@ -84,6 +97,16 @@ function App() {
     <div>
       <header>
         <h1>UK Tick Tracker</h1>
+
+        {/* NEW: Light/dark toggle. Shows a moon in light mode, a sun in dark mode */}
+        <button
+          className="theme-toggle"
+          onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
+          aria-label={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
+          title={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
+        >
+          {theme === 'light' ? '🌙' : '☀️'}
+        </button>
 
         {/* Tabs: clicking one changes 'page', which changes what is shown below */}
         <nav>
