@@ -109,3 +109,8 @@ code {
   padding: 4px 8px;
   background: var(--code-bg);
 }
+.popup-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
