@@ -7,6 +7,7 @@
   --accent: #006cc9;      /* buttons, active tab (Elanco blue) */
   --accent-text: #006cc9; /* blue used for text on the page background */
   --map-glow: rgba(0, 108, 201, 0.15);   /* light blue ring around the map */
+  --required: #d93025;                   /* red for required-field markers */
   --map-shadow: rgba(5, 12, 71, 0.15);   /* soft navy shadow under the map */
 
   --sans: 'Atkinson Hyperlegible', system-ui, 'Segoe UI', Roboto, sans-serif;
@@ -47,6 +48,7 @@
   --accent: #006cc9;      /* buttons stay Elanco blue (white text still readable) */
   --accent-text: #4da3ff; /* lighter blue so text stays readable on dark */
   --map-glow: rgba(77, 163, 255, 0.25);
+  --required: #ff7b72;                   /* lighter red so it's readable on navy */
   --map-shadow: rgba(0, 0, 0, 0.5);
   color-scheme: dark;
 }
@@ -99,9 +101,28 @@ p {
 }
 
 /* ---------- Header, tabs and light/dark toggle ---------- */
+/* Header is a grid:  [ logo | title | toolbar ]  with the tabs on a row underneath.
+   The middle column is exactly as wide as the heading, the side columns share the rest
+   equally (1fr each), and the logo is centred in its column - so the gap between the
+   page border and the logo matches the gap between the logo and the heading,
+   and it stays even if the text size changes. */
 header {
-  position: relative; /* so the logo and toolbar can sit in the header's corners */
-  min-height: 170px;  /* tall enough for the 3 toolbar buttons */
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  grid-template-areas:
+    'logo title tools'
+    'nav  nav   nav';
+  align-items: center;
+  padding-top: 16px;
+}
+
+.title {
+  grid-area: title;
+}
+
+nav {
+  grid-area: nav;
+  justify-self: center; /* only as wide as the tabs, so it doesn't cover the logo or toolbar */
 }
 
 nav {
@@ -129,9 +150,11 @@ nav button[aria-current='page'] {
 
 /* Toolbar: light/dark, colour-blind and magnifier buttons, stacked in the top-right */
 .toolbar {
-  position: absolute;
-  top: 16px;
-  right: 16px;
+  grid-area: tools;
+  grid-row: 1 / 3;    /* spans the title row and the tabs row, so it doesn't stretch the title row */
+  justify-self: end;  /* right-hand edge of its column */
+  align-self: start;  /* top of the header */
+  margin-right: 16px;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -156,6 +179,11 @@ nav button[aria-current='page'] {
 .tool-icon {
   width: 28px;
   height: 28px;
+}
+
+/* In dark mode, brighten the blue icons so they stand out on the navy background */
+:root[data-theme='dark'] .tool-icon {
+  filter: brightness(1.7);
 }
 
 /* ---------- Map page ---------- */
@@ -439,6 +467,13 @@ main > p {
   color: white;
 }
 
+/* Red asterisks and the "Fields marked * are required" note */
+.required,
+.required-note {
+  color: var(--required);
+  font-weight: 700;
+}
+
 .hint {
   font-size: calc(16px * var(--scale));
 }
@@ -494,11 +529,11 @@ main > p {
 }
 
 .logo {
-  position: absolute; /* top-left corner of the header */
-  top: 16px;
-  left: 16px;
-  width: 110px;
-  height: 110px;
+  grid-area: logo;
+  grid-row: 1 / 3;      /* spans the title row and the tabs row, like the toolbar */
+  justify-self: center; /* centred between the page border and the heading */
+  width: 140px;
+  height: 140px;
   border-radius: 50%;
   box-shadow: 0 0 0 2px var(--border); /* thin ring so the navy logo still stands out in dark mode */
 }
@@ -579,27 +614,36 @@ input[type='file'] {
 
 /* ---------- Small screens (phones) ---------- */
 @media (max-width: 600px) {
+  /* Phones: logo and toolbar share the top row, title and tabs go underneath */
   header {
-    min-height: 0;
-    padding-top: 72px; /* room above the title for the logo and toolbar */
+    grid-template-columns: auto 1fr;
+    grid-template-areas:
+      'logo  tools'
+      'title title'
+      'nav   nav';
+    padding: 8px 12px 0;
+  }
+
+  .toolbar {
+    grid-row: auto;
+    margin-right: 0;
   }
 
   .title {
     font-size: calc(28px * var(--scale));
-    margin-top: 0;
+    margin: 8px 0 12px;
   }
 
   .logo {
-    top: 8px;
-    left: 12px;
-    width: 56px;
-    height: 56px;
+    grid-row: auto;
+    justify-self: start;
+    width: 64px;
+    height: 64px;
   }
 
   /* On phones the 3 toolbar buttons sit in a row instead of a column */
   .toolbar {
-    top: 12px;
-    right: 12px;
+    align-self: center;
     flex-direction: row;
   }
 

@@ -90,7 +90,7 @@ function ReportForm({ initialCity, speciesList, onSubmit }) {
   return (
     <div className="report">
       <h2>Report a tick sighting</h2>
-      <p>Fields marked * are required.</p>
+      <p className="required-note">Fields marked <span className="required">*</span> are required.</p>
 
       {/* Messages. role="alert"/"status" makes screen readers read them out */}
       {errors.length > 0 && (
@@ -104,22 +104,24 @@ function ReportForm({ initialCity, speciesList, onSubmit }) {
       {success && <div className="message success" role="status">{success}</div>}
       {warning && <div className="message warning" role="status">{warning}</div>}
 
-      {/* noValidate turns off the browser's own pop-ups so my messages are used instead */}
+      {/* noValidate turns off the browser's own pop-ups so my messages are used instead.
+          The red * is hidden from screen readers (aria-hidden); the 'required' attribute
+          on each field tells them instead, so they hear "required" rather than "star". */}
       <form onSubmit={handleSubmit} noValidate>
-        <label htmlFor="date">Date *</label>
-        <input id="date" type="date" max={today} value={date} onChange={e => setDate(e.target.value)} />
+        <label htmlFor="date">Date <span className="required" aria-hidden="true">*</span></label>
+        <input id="date" type="date" required max={today} value={date} onChange={e => setDate(e.target.value)} />
 
-        <label htmlFor="time">Time *</label>
-        <input id="time" type="time" value={time} onChange={e => setTime(e.target.value)} />
+        <label htmlFor="time">Time <span className="required" aria-hidden="true">*</span></label>
+        <input id="time" type="time" required value={time} onChange={e => setTime(e.target.value)} />
 
-        <label htmlFor="city">Location *</label>
-        <select id="city" value={city} onChange={e => setCity(e.target.value)}>
+        <label htmlFor="city">Location <span className="required" aria-hidden="true">*</span></label>
+        <select id="city" required value={city} onChange={e => setCity(e.target.value)}>
           <option value="">Choose a city</option>
           {cityNames.map(name => <option key={name} value={name}>{name}</option>)}
         </select>
 
-        <label htmlFor="species">Species *</label>
-        <select id="species" value={species} onChange={e => setSpecies(e.target.value)}>
+        <label htmlFor="species">Species <span className="required" aria-hidden="true">*</span></label>
+        <select id="species" required value={species} onChange={e => setSpecies(e.target.value)}>
           <option value="">Choose a species</option>
           {speciesList.map(name => <option key={name} value={name}>{name}</option>)}
         </select>

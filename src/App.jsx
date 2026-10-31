@@ -133,8 +133,8 @@ function App() {
 
         <h1 className="title">UK Tick Tracker</h1>
 
-        {/* Toolbar in the top-right corner. The icons live in public/icons/ -
-            swap in your own PNGs with the same names */}
+        {/* Toolbar in the top-right corner. Icons are from Lucide (lucide.dev, ISC licence),
+            stored in public/icons/ and coloured Elanco blue */}
         <div className="toolbar">
           {/* Light/dark toggle: moon in light mode, sun in dark mode */}
           <button
@@ -143,7 +143,7 @@ function App() {
             aria-label={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
             title={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
           >
-            <img className="tool-icon" src={theme === 'light' ? '/icons/moon.png' : '/icons/sun.png'} alt="" />
+            <img className="tool-icon" src={theme === 'light' ? '/icons/moon.svg' : '/icons/sun.svg'} alt="" />
           </button>
 
           {/* Colour-blind-friendly map colours. aria-pressed tells screen readers it's on/off */}
@@ -154,7 +154,7 @@ function App() {
             aria-label="Colour-blind-friendly colours"
             title="Colour-blind-friendly colours"
           >
-            <img className="tool-icon" src="/icons/colourblind.png" alt="" />
+            <img className="tool-icon" src="/icons/colourblind.svg" alt="" />
           </button>
 
           {/* Magnifier: makes all the text bigger */}
@@ -165,7 +165,7 @@ function App() {
             aria-label="Larger text"
             title="Larger text"
           >
-            <img className="tool-icon" src="/icons/magnifier.png" alt="" />
+            <img className="tool-icon" src="/icons/magnifier.svg" alt="" />
           </button>
         </div>
 

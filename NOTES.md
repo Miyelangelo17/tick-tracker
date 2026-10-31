@@ -96,10 +96,7 @@ I have been swamped with the group task among other deadlines so i had to delay 
 - Upgraded my counter: instead of a number per city, each city now keeps a list of its sightings (`.push`). The list's `.length` is the count, and the details are there for the popup.
 - Cities missing from `cities.js` are skipped with `continue`.
 - `.map()` turns the list of city names into one `<CircleMarker>` per city.
-
-### Decisions
-- Severity is relative (compared to the busiest city), so the colours still make sense when the data is filtered.
-- Time pressure: from this session, Claude wrote the feature code under my direction. I tested each part, committed it, and made sure I can explain how it works.  
+ 
 
 ### Styles
 
@@ -228,5 +225,39 @@ I have been swamped with the group task among other deadlines so i had to delay 
 - `prefers-reduced-motion` turns animations off for users who've asked their computer for less motion.
 - The decorative logo and icons use `alt=""`, and the toggle has an `aria-label`.
 
+### Done
+- **Hover a result → map opens that city.** Hovering a card in the Results panel opens that city's popup on the map. Keyboard (Tab) and tap work too.
+- **"Read more" links** on each species card, going to that species' section of the UKHSA tick profiles page.
+- **Removed** the "Showing X of 1000 sightings" line above the map.
+- **Place names readable through the circles** using CSS `mix-blend-mode: multiply`.
+- **My own logo** (tick with a map on its back and a location pin), cropped to a circle and used in the header and as the browser-tab icon.
+- **Header layout**: logo top-left, evenly spaced between the page border and the heading; toolbar top-right.
+- **Readable font**: Atkinson Hyperlegible (designed by the Braille Institute for low vision), with bigger small text, including the map popups.
+- **Colour-blind toggle**: switches activity colours to the "viridis" palette (dark purple / teal / yellow), which people with any type of colour blindness can tell apart.
+- **Magnifier toggle**: makes all text 25% bigger.
+- **Lucide icons** for the toolbar, coloured Elanco blue.
+- **Red required markers** on the report form.
+
+### How it works
+- Hover → popup: App holds `activeCity` state. Results sets it on hover, and TickMap keeps a `useRef` handle on each city's circle. A `useEffect` with `[activeCity]` calls `openPopup()` on the matching circle. On mouse leave it resets to `null`, so hovering the same city again still counts as a change.
+- Read more links use a "text fragment" (`#:~:text=...`) so the browser scrolls to and highlights that species' heading. Browsers without support just open the top of the page.
+- `mix-blend-mode: multiply` makes the circles act like see-through coloured film, so the dark map text shows through.
+- Text scaling: every font size is `calc(Npx * var(--scale))`. The magnifier sets `data-text-size="large"` on `<html>`, which changes `--scale` from 1 to 1.25, so one setting resizes all text.
+- Colour palettes live in `severity.js`, so the map, Results dots and legend all switch together.
+- Toggles use `aria-pressed` so screen readers announce on/off, and they're remembered in localStorage.
+- The header is a CSS grid `1fr auto 1fr`: the middle column fits the heading, the side columns are equal, and the logo is centred in its column, so the gaps either side of it match at any screen or text size.
+- The red `*` is `aria-hidden`, and the fields have the `required` attribute instead, so screen readers say "required", not "star".
+
+### Problems and solutions
+- **CARTO map tiles broke the map** ("API KEY REQUIRED"). I tried them so place names could sit above the circles, but they now need an API key. I went back to free OpenStreetMap tiles and used `mix-blend-mode` instead. Lesson: check a third-party service's terms and limits before depending on it.
+- **"Recent" badge was wrong when filtering by year**: it compared against the newest sighting *shown*, so everything in that year looked recent. Fixed by comparing against the newest date in the whole API data.
+- **Magnifier button wouldn't click**: the tabs row stretched across the full header and invisibly covered it. Fixed with `justify-self: center`, so the row is only as wide as the tabs.
+- **Lucide icons came out black**: they use `currentColor`, which doesn't work in an `<img>`, so I set their colour to Elanco blue in the SVG files.
+
+### Credits
+- Icons: Lucide (lucide.dev), ISC licence.
+- Font: Atkinson Hyperlegible (Google Fonts, SIL Open Font Licence).
+- Species facts and "Read more" links: UK Health Security Agency; tick-bite advice: NHS.
+
 ### Note
-- Claude wrote the styling and Results code under my direction, applied it directly to my project files, and I reviewed and tested it in the browser.
+- Claude/Copilot debugged this code under my direction and applied it straight to my project files. I tested every change in the browser and asked for fixes where needed, i used public libaries, and free logos to add styling and animations to my website.
