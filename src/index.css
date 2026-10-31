@@ -113,4 +113,77 @@ code {
   display: flex;
   gap: 8px;
   align-items: center;
+} 
+
+/* ---------- Tick Tracker styles ---------- */
+h1 {
+  font-size: 40px;
+  margin: 24px 0 12px;
+}
+
+nav {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+button {
+  font: inherit;
+  padding: 6px 14px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--text-h);
+  cursor: pointer;
+}
+
+nav button[aria-current='page'] {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}
+
+.filters {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-bottom: 8px;
+}
+
+select {
+  font: inherit;
+  padding: 4px;
+}
+
+main > p {
+  margin-bottom: 12px;
+}
+
+.legend {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin: 12px 0 24px;
+}
+
+.dot {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1px solid #333;
+  vertical-align: middle;
+}
+
+.popup-actions a,
+.popup-actions button {
+  white-space: nowrap;
+}
+
+.popup-actions button {
+  padding: 2px 8px;
+  font-size: 14px;
+  color: #08060d;
+  background: #fff;
 }
