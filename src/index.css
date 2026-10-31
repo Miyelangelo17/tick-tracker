@@ -6,6 +6,8 @@
   --border: #ededed;      /* borders and dividers */
   --accent: #006cc9;      /* buttons, active tab (Elanco blue) */
   --accent-text: #006cc9; /* blue used for text on the page background */
+  --map-glow: rgba(0, 108, 201, 0.15);   /* light blue ring around the map */
+  --map-shadow: rgba(5, 12, 71, 0.15);   /* soft navy shadow under the map */
 
   --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
   --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
@@ -35,6 +37,8 @@
   --border: #24305e;
   --accent: #006cc9;      /* buttons stay Elanco blue (white text still readable) */
   --accent-text: #4da3ff; /* lighter blue so text stays readable on dark */
+  --map-glow: rgba(77, 163, 255, 0.25);
+  --map-shadow: rgba(0, 0, 0, 0.5);
   color-scheme: dark;
 }
 
@@ -117,9 +121,13 @@ nav button[aria-current='page'] {
   position: absolute;
   top: 16px;
   right: 16px;
-  font-size: 22px;
-  line-height: 1;
-  padding: 8px 10px;
+  padding: 6px;
+  line-height: 0; /* stops extra space under the image */
+}
+
+.theme-icon {
+  width: 28px;
+  height: 28px;
 }
 
 /* ---------- Map page ---------- */
@@ -153,6 +161,27 @@ main > p {
   border-radius: 50%;
   border: 1px solid #333;
   vertical-align: middle;
+}
+
+/* Rounded, highlighted border around the map */
+.map-frame {
+  margin: 0 24px;
+  border: 2px solid var(--accent);
+  border-radius: 14px;
+  overflow: hidden; /* clips the map's square corners to the rounded border */
+  box-shadow:
+    0 0 0 5px var(--map-glow),    /* soft blue "highlight" ring around the border */
+    0 10px 30px var(--map-shadow); /* gentle shadow underneath */
+}
+
+/* Circles get a highlighted outline when you hover over them */
+.map-frame path.leaflet-interactive {
+  transition: stroke-width 0.15s;
+}
+
+.map-frame path.leaflet-interactive:hover {
+  stroke: var(--accent);
+  stroke-width: 4px;
 }
 
 /* Popups are always white (Leaflet's style), so their buttons use fixed colours */
@@ -292,4 +321,30 @@ main > p {
   background: #e6f4ea;
   border-color: #1e8e3e;
   color: #0d5a26;
+}
+
+/* ---------- Logo and footer ---------- */
+.app {
+  flex: 1; /* fill the full height of #root, so the footer can sit at the bottom */
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.logo {
+  width: 48px;
+  height: 48px;
+}
+
+footer {
+  margin-top: auto; /* pushes the footer to the bottom of the page */
+  padding: 16px 24px;
+  border-top: 1px solid var(--border);
+  font-size: 14px;
 }

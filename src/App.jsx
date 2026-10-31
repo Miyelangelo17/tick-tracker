@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import TickMap from './Components/TickMap'
 import Learn from './Components/Learn'
 import ReportForm from './Components/ReportForm'
+import logo from './assets/tick-logo.svg'
 
 const API_URL = 'https://dev-task.elancoapps.com/data/tick-sightings'
 
@@ -22,14 +23,14 @@ function App() {
   // The city to pre-fill on the report form (set by a popup's Report button)
   const [reportCity, setReportCity] = useState('')
 
-  // NEW: Light or dark mode. Start with the user's saved choice, otherwise their computer's setting
+  // Light or dark mode. Start with the user's saved choice, otherwise their computer's setting
   const [theme, setTheme] = useState(() => {
     const saved = localStorage.getItem('theme')
     if (saved) return saved
     return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
   })
 
-  // NEW: Whenever 'theme' changes, put it on the <html> tag (the CSS reads it) and remember it
+  // Whenever 'theme' changes, put it on the <html> tag (the CSS reads it) and remember it
   useEffect(() => {
     document.documentElement.dataset.theme = theme
     localStorage.setItem('theme', theme)
@@ -94,18 +95,26 @@ function App() {
   }
 
   return (
-    <div>
+    <div className="app">
       <header>
-        <h1>UK Tick Tracker</h1>
+        <h1 className="title">
+          <img className="logo" src={logo} alt="" /> {/* alt="" because the title already says what it is */}
+          UK Tick Tracker
+        </h1>
 
-        {/* NEW: Light/dark toggle. Shows a moon in light mode, a sun in dark mode */}
+        {/* Light/dark toggle. Shows a moon in light mode, a sun in dark mode.
+            The images live in public/icons/ - swap in your own PNGs with the same names */}
         <button
           className="theme-toggle"
           onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
           aria-label={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
           title={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
         >
-          {theme === 'light' ? '🌙' : '☀️'}
+          <img
+            className="theme-icon"
+            src={theme === 'light' ? '/icons/moon.png' : '/icons/sun.png'}
+            alt=""
+          />
         </button>
 
         {/* Tabs: clicking one changes 'page', which changes what is shown below */}
@@ -148,7 +157,10 @@ function App() {
 
           <p>Showing {filteredSightings.length} of {allSightings.length} sightings. Click a circle for details.</p>
 
-          <TickMap sightings={filteredSightings} onReport={handleReport} />
+          {/* map-frame gives the map its rounded, highlighted border (see index.css) */}
+          <div className="map-frame">
+            <TickMap sightings={filteredSightings} onReport={handleReport} />
+          </div>
 
           {/* Legend explaining the circle colours */}
           <div className="legend">
@@ -171,6 +183,11 @@ function App() {
           <ReportForm initialCity={reportCity} speciesList={SPECIES} onSubmit={handleAddReport} />
         </main>
       )}
+
+      <footer>
+        <p>Prototype built by Miyelangelo Dell'Ovo Mujica for the Elanco placement technical task.</p>
+        <p>Sighting data: Elanco tick sightings API · Map: © OpenStreetMap contributors</p>
+      </footer>
     </div>
   )
 }
