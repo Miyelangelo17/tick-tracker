@@ -55,7 +55,11 @@ function TickMap({ sightings, onReport }) {
     <MapContainer
       center={[54.5, -3]}
       zoom={6}
-      style={{ height: '600px', width: '100%' }}
+      style={{ height: '600px', width: '100%' }} 
+      minZoom={5} 
+      maxZoom={9}  
+      maxBounds={[[49.5, -10], [60, 3]]}
+
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

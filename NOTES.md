@@ -74,4 +74,92 @@ A short log of what I did each session, the decisions I made, and the problems I
 - Did have to use Claude to Debug and teach me line by line what everything meant.
 
 ### Note 
-Claude did inittialise this notes page, however it is I who manually wrote in any extra information and can confirm the verity of them. This page is essentially mental reflections on any work that im doing.
+Claude did inittialise this notes page, however it is I who manually wrote in any extra information and can confirm the verity of them. This page is essentially mental reflections on any work that im doing. 
+
+## Sat 31 Oct: Moved to PC + circles and popups 
+
+I have been swamped with the group task among other deadlines so i had to delay this project which is annoying. the tick map and app logic have been chnaged in between today and tuesday but i didnt have the chance to review it and commit it, will do it today
+
+### Setup on PC
+- Cloned the repo from GitHub, ran `npm install` (node_modules aren't stored on GitHub, so every new machine needs this), then `npm run dev`.
+- Set my git name and noreply email on the PC so commits link to my GitHub account.
+- Mistake: typed `npm install dev`, which tried to install a package called "dev" (Linux-only), so it failed. `npm install` and `npm run dev` are separate commands.
+- Mistake: added a full stop at the end of my git email by accident. Re-ran the command and checked it with `git config --global user.email`.
+
+### Done
+- One circle per city, sized by number of sightings.
+- Circle colour shows "severity": the API has no severity field, so I compare each city with the busiest city. 85%+ = High (red), 70%+ = Medium (orange), otherwise Low (yellow).
+- Clicking a circle opens a popup with the city's total, its activity level and the 5 most recent sightings.
+- Quick actions in the popup: Get directions (opens Google Maps at the city) and Share (uses the device's share menu, or copies to the clipboard if there isn't one).
+
+### How it works
+- Upgraded my counter: instead of a number per city, each city now keeps a list of its sightings (`.push`). The list's `.length` is the count, and the details are there for the popup.
+- Cities missing from `cities.js` are skipped with `continue`.
+- `.map()` turns the list of city names into one `<CircleMarker>` per city.
+
+### Decisions
+- Severity is relative (compared to the busiest city), so the colours still make sense when the data is filtered.
+- Time pressure: from this session, Claude wrote the feature code under my direction. I tested each part, committed it, and made sure I can explain how it works.  
+
+### Styles
+
+- “Added tabs (state, no router library), species + year filters (.filter()), a colour legend, and the popup’s Report button (App passes a function down as a prop). App handles the data, TickMap only draws what it’s given.” 
+
+## Sat 31 Oct: Tabs, filters and legend
+
+### Done
+- Added three tabs: Map, Learn about ticks, Report a sighting.
+- Added Species and Year dropdown filters above the map. They work together, e.g. "Marsh tick in 2015".
+- A line above the map shows "Showing X of 1000 sightings" so the user can see the filter working.
+- Added a legend under the map explaining the circle colours and sizes.
+- The "Report a sighting" button in a map popup now switches to the Report tab and remembers which city was clicked.
+
+### How it works
+- Tabs: a `page` state holds 'map', 'learn' or 'report'. Each button calls `setPage(...)`, and `{page === 'map' && (...)}` only shows that section when it matches.
+- Filters: each dropdown is a "controlled" input. Its value comes from state (`speciesFilter` / `yearFilter`), and `onChange` updates that state when the user picks something.
+- `.filter()` keeps only the sightings where (species is All OR matches) AND (year is All OR matches).
+- The year list is built from the data with the same pattern as my city counter: loop, take the first 4 characters of the date, add it if it isn't already in the list (`!years.includes(year)`), then sort.
+- App passes the filtered list to TickMap, so TickMap just draws whatever it's given.
+- The popup's Report button works by App passing its `handleReport` function down to TickMap as a prop (`onReport`). The child calls it, and the parent updates its state. This is how a child component tells its parent something happened.
+
+### Decisions
+- Used state for tabs instead of installing a routing library (React Router). It's three pages, so a library would add complexity for no real benefit.
+- App owns the data and filters, TickMap only draws. Keeping data and display separate makes each part easier to understand and change.
+- Filtered by year instead of a free date range: simpler for users, and it matches the seasonal chart idea in the brief.
+- Accessibility: tabs use `aria-current="page"` so screen readers announce the active tab, and the dropdowns have labels.
+
+## Sat 31 Oct: Learn page
+
+### Done
+- Species identification guide: a card for each of the 5 species with its Latin name, what it lives on, where it's found, a practical tip, and how many sightings are in the data.
+- Prevention tips for people and pets.
+- Step-by-step advice on removing a tick and when to see a GP (Lyme disease signs).
+- Sources linked at the bottom of the page.
+
+### How it works
+- The species info is stored as an array of objects (`SPECIES_INFO`) and drawn with `.map()`, one card per species. Adding a species just means adding one object.
+- Latin names and sighting counts come from the API data, not typed in by hand: `.find()` gets the first sighting of a species (to read its `latinName`), and `.filter().length` counts them. So the guide always matches the data.
+- `match ? match.latinName : ''` is a short if/else (the "ternary" operator).
+
+### Decisions
+- Checked facts against the UK Health Security Agency's tick species profiles and NHS advice, and cited them on the page. It's health information, so it needs to be accurate and traceable.
+- Pet advice included because Elanco is an animal health company and pet owners are a key audience.
+- Used meaningful HTML (`section`, `article`, `h2`/`h3`) so screen readers can jump between headings (accessibility).
+
+### Learned
+- `.find()` returns one item (the first match), while `.filter()` returns a new array of every match. 
+
+## Sat 31 Oct: Limiting the map
+
+### Done
+- Locked the map to the UK. Users can't zoom out to the world or zoom in past city level.
+
+### How it works
+- `minZoom` / `maxZoom` set how far out and in you can zoom. `maxZoom={10}` is roughly city level, which is as detailed as my data gets.
+- `maxBounds` is an invisible box (bottom-left and top-right corners as [lat, lng]) that the map can't be dragged outside of. `maxBoundsViscosity={1.0}` makes the edge a hard stop instead of springing back.
+
+### Decisions
+- All the data is UK cities, so letting users wander around the world map adds nothing and can confuse them.
+
+### Note
+- GitHub Copilot autocomplete suggested the boundary coordinates. I checked them by dragging the map to each edge of the UK.
