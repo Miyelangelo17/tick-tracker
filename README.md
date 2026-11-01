@@ -5,7 +5,7 @@ Built by **Miyelangelo Dell'Ovo Mujica**, BSc Computer Science (AI), Brunel Univ
 
 An interactive web app that maps reported tick sightings across the UK, helps people identify tick species and avoid bites, and lets them report their own sightings.
 
-📹 **Video walkthrough:** https://www.youtube.com/watch?v=lj2wwAMLMPk
+ **Video walkthrough:** https://www.youtube.com/watch?v=lj2wwAMLMPk
 
 ---
 
