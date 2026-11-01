@@ -5,7 +5,7 @@ Built by **Miyelangelo Dell'Ovo Mujica**, BSc Computer Science (AI), Brunel Univ
 
 An interactive web app that maps reported tick sightings across the UK, helps people identify tick species and avoid bites, and lets them report their own sightings.
 
-📹 **Video walkthrough:** [ADD YOUTUBE LINK HERE]
+📹 **Video walkthrough:** https://www.youtube.com/watch?v=lj2wwAMLMPk
 
 ---
 
@@ -56,7 +56,7 @@ then click on O + enter in the terminal to run it on a browser
 Type Q + enter to exit in terminal
 ```
 
-Then open the address it prints, normally **http://localhost:5173**.
+Then open the address it prints, normally **http://localhost:5173**. It most likely opens the tab for you  though
 
 Other commands:
 
@@ -64,9 +64,8 @@ Other commands:
 |---|---|
 | `npm run build` | Builds an optimised version for hosting (into `dist/`) |
 | `npm run preview` | Serves that built version locally |
-| `npm run lint` | Checks the code with ESLint |
 
-> **Windows tip:** if PowerShell says "running scripts is disabled", use Command Prompt instead.
+> **Windows tip:** if PowerShell says "running scripts is disabled", use Command Prompt instead. I used Command Prompt
 
 No API key is needed. The sightings come from Elanco's public API (`https://dev-task.elancoapps.com/data/tick-sightings`).
 
@@ -78,19 +77,17 @@ The brief asks for at least 2 features from each area.
 
 | Area | Requirement | Status | How |
 |---|---|---|---|
-| **1. Interactive map** | Dynamic map of UK sightings | ✅ | Leaflet map, limited to the UK |
-| | Markers with visual indicators | ✅ | Circle **size** = number of sightings, **colour** = activity level, plus a legend |
-| | Filter controls | ✅ | Species and year dropdowns (they work together) |
-| **2. Sighting information** | Sidebar/modal on click | ✅ | Popup with total, activity level and 5 most recent sightings, plus the Results panel |
-| | Timeline view | ➖ | Not built (see [next steps](#limitations-and-what-id-do-next)) |
-| | Quick actions | ✅ | Report a sighting (pre-fills the city), Get directions (Google Maps), Share |
-| **3. Education** | Species identification guide | ✅ | 5 species cards with Latin names, hosts, habitat, tips and "Read more" links |
-| | Prevention tips | ✅ | Prevention for people and pets, tick removal steps, when to see a GP |
-| | Seasonal activity chart | ➖ | Not built (see next steps) |
-| **4. Report a sighting** | Form | ✅ | Date, time, location, species, photo. Saved locally (see [decisions](#key-design-decisions)) |
-| | Validation messages | ✅ | **Errors** (block saving), **warning** (no photo), **success** |
-| | Image upload | ✅ | Type and size checks (images only, max 5 MB) with a preview |
-| **Extras** | Accessibility | ✅ | See [Accessibility](#accessibility) |
+| **1. Interactive map** | Dynamic map of UK sightings | ✓ | Leaflet map, limited to the UK |
+| | Markers with visual indicators | ✓ | Circle **size** = number of sightings, **colour** = activity level, plus a legend |
+| | Filter controls | ✓ | Species and year dropdowns (they work together) |
+| **2. Sighting information** | Sidebar/modal on click | ✓ | Popup with total, activity level and 5 most recent sightings, plus the Results panel |
+| | Quick actions | ✓ | Report a sighting (pre-fills the city), Get directions (Google Maps), Share |
+| **3. Education** | Species identification guide | ✓ | 5 species cards with Latin names, hosts, habitat, tips and "Read more" links |
+| | Prevention tips | ✓ | Prevention for people and pets, tick removal steps, when to see a GP |
+| **4. Report a sighting** | Form | ✓ | Date, time, location, species, photo. Saved locally (see [decisions](#key-design-decisions)) |
+| | Validation messages | ✓ | **Errors** (block saving), **warning** (no photo), **success** |
+| | Image upload | ✓ | Type and size checks (images only, max 5 MB) with a preview |
+| **Extras** | Accessibility | ✓ | See [Accessibility](#accessibility) |
 
 ---
 
@@ -200,9 +197,9 @@ Automated tests (Vitest + React Testing Library) are on my next-steps list.
 
 I want to be open about how I used AI, as I would on a real team.
 
-- **Claude (Anthropic)** was my main assistant. Early on it taught me step by step: I wrote the first parts myself (fetching the data, the base map, counting sightings per city) while it explained each line and helped me debug. Under time pressure on the final day, Claude wrote most of the feature and styling code to my specification and applied it to my project. I tested every change in the browser, asked for fixes, and went through the code so I can explain how each part works.
-- **GitHub Copilot** autocomplete in VS Code suggested some code, e.g. the map boundary coordinates, which I checked by testing the map edges.
-- **Logo:** [SAY HOW YOU MADE IT, e.g. "designed by me using <tool>"]
+-  **Claude (Anthropic)** was my main assistant. At the start it taught me step by step while I wrote the first parts myself (fetching the data, the base map, counting sightings per city), explaining each line and helping me debug. From the map circles onwards I was short on time, so Claude wrote much of the feature and styling code from my instructions. I tested every change in the browser, asked for fixes when things weren't right, and went through the code so I understand how each part works.
+- **GitHub Copilot** autocomplete in VS Code suggested some code, mostly CSS styling, and the map boundary coordinates, which I checked by dragging the map to each edge.
+- **Logo:** I drafted it with Google Gemini, then finished it in LogoMakr and Photoshop. It's used for the header logo and the browser tab icon.
 
 All design decisions, feature choices and trade-offs are mine. My `NOTES.md` dev log records what I did, what went wrong and what I learned in each session.
 
