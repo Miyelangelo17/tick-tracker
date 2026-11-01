@@ -197,7 +197,7 @@ Automated tests (Vitest + React Testing Library) are on my next-steps list.
 
 I want to be open about how I used AI, as I would on a real team.
 
--  **Claude (Anthropic)** was my main assistant. At the start it taught me step by step while I wrote the first parts myself (fetching the data, the base map, counting sightings per city), explaining each line and helping me debug. From the map circles onwards I was short on time, so Claude wrote much of the feature and styling code from my instructions. I tested every change in the browser, asked for fixes when things weren't right, and went through the code so I understand how each part works.
+-  **Claude (Anthropic)** was my main assistant. At the start it taught me step by step while I wrote the first parts myself (fetching the data, the base map, counting sightings per city), explaining each line and helping me debug. I tested every change in the browser, asked for fixes when things weren't right, and went through the code so I understand how each part works.
 - **GitHub Copilot** autocomplete in VS Code suggested some code, mostly CSS styling, and the map boundary coordinates, which I checked by dragging the map to each edge.
 - **Logo:** I drafted it with Google Gemini, then finished it in LogoMakr and Photoshop. It's used for the header logo and the browser tab icon.
 
